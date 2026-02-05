@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #d946a6;
+            color: white;
+        }
+        button:hover {
+            background: #c03890;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Audio Test</h1>
+        <p>Click the button to test if your audio file works:</p>
+        
+        <button onclick="testAudio()">Test Audio File</button>
+        <button onclick="checkFile()">Check File Path</button>
+        
+        <div class="status" id="status">
+            Click "Test Audio File" to begin...
+        </div>
+        
+        <hr style="margin: 30px 0;">
+        
+        <h3>Browser's Native Audio Player:</h3>
+        <audio controls id="nativePlayer">
+            <source src="best-part.mp3" type="audio/mpeg">
+            Your browser doesn't support audio.
+        </audio>
+        
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+            <strong>Instructions:</strong><br>
+            1. Save this file in the SAME folder as best-part.mp3<br>
+            2. Try the native audio player above - does it work?<br>
+            3. Click "Test Audio File" button<br>
+            4. Tell me what messages appear
+        </p>
+    </div>
+
+    <script>
+        let testAudio = null;
+
+        function testAudio() {
+            const status = document.getElementById('status');
+            status.innerHTML = '<div style="color: blue;">Testing audio file...</div>';
+            
+            // Create new audio
+            testAudio = new Audio('best-part.mp3');
+            
+            // Log everything
+            console.log('Audio created');
+            console.log('Audio source:', testAudio.src);
+            
+            // Event listeners for debugging
+            testAudio.addEventListener('loadstart', () => {
+                console.log('✓ Load started');
+                status.innerHTML += '<div class="success">✓ Started loading file...</div>';
+            });
+            
+            testAudio.addEventListener('loadedmetadata', () => {
+                console.log('✓ Metadata loaded');
+                status.innerHTML += '<div class="success">✓ File found! Duration: ' + testAudio.duration + ' seconds</div>';
+            });
+            
+            testAudio.addEventListener('loadeddata', () => {
+                console.log('✓ Data loaded');
+                status.innerHTML += '<div class="success">✓ Audio data loaded successfully!</div>';
+            });
+            
+            testAudio.addEventListener('canplay', () => {
+                console.log('✓ Can play');
+                status.innerHTML += '<div class="success">✓ Ready to play!</div>';
+            });
+            
+            testAudio.addEventListener('error', (e) => {
+                console.error('✗ Audio error:', e);
+                console.error('Error details:', testAudio.error);
+                
+                let errorMsg = 'Unknown error';
+                if (testAudio.error) {
+                    switch(testAudio.error.code) {
+                        case 1: errorMsg = 'MEDIA_ERR_ABORTED - Loading was aborted'; break;
+                        case 2: errorMsg = 'MEDIA_ERR_NETWORK - Network error'; break;
+                        case 3: errorMsg = 'MEDIA_ERR_DECODE - Decoding error (file might be corrupted)'; break;
+                        case 4: errorMsg = 'MEDIA_ERR_SRC_NOT_SUPPORTED - File not found or format not supported'; break;
+                    }
+                }
+                
+                status.innerHTML += '<div class="error">✗ ERROR: ' + errorMsg + '</div>';
+            });
+            
+            // Try to play
+            testAudio.play().then(() => {
+                console.log('✓ Playing!');
+                status.innerHTML += '<div class="success" style="font-weight: bold;">✓ MUSIC IS PLAYING! 🎵</div>';
+            }).catch((error) => {
+                console.error('✗ Play failed:', error);
+                status.innerHTML += '<div class="error">✗ Play failed: ' + error.message + '</div>';
+            });
+        }
+        
+        function checkFile() {
+            const status = document.getElementById('status');
+            const tempAudio = new Audio('best-part.mp3');
+            
+            status.innerHTML = '<div><strong>File Path Check:</strong></div>';
+            status.innerHTML += '<div>Full path: ' + tempAudio.src + '</div>';
+            status.innerHTML += '<div style="margin-top: 10px; font-size: 12px; color: #666;">This should end with "best-part.mp3"</div>';
+            
+            console.log('Full audio source path:', tempAudio.src);
+        }
+    </script>
+</body>
+</html>

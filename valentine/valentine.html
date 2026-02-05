@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Galentines ♥</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe4f1 50%, #ffd6eb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        .heart-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            animation: float 15s infinite ease-in-out;
+            opacity: 0.3;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Card container */
+        .card-container {
+            position: relative;
+            z-index: 10;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            padding: 60px 50px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Header section */
+        .card-header {
+            margin-bottom: 40px;
+        }
+
+        .main-heart {
+            font-size: 80px;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+            color: #ff69b4;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            10%, 30% {
+                transform: scale(1.1);
+            }
+            20%, 40% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 42px;
+            color: #d946a6;
+            margin: 20px 0;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        /* Typing text area */
+        .message-container {
+            margin: 40px 0;
+            min-height: 150px;
+        }
+
+        .typed-text {
+            font-size: 20px;
+            color: #666;
+            line-height: 1.8;
+            font-style: italic;
+            min-height: 60px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 24px;
+            background-color: #d946a6;
+            margin-left: 3px;
+            animation: blink 0.7s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0;
+            }
+        }
+
+        /* Interactive buttons */
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 16px;
+            border: 2px solid #d946a6;
+            background: white;
+            color: #d946a6;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #d946a6;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(217, 70, 166, 0.3);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Music button special styling */
+        .music-btn {
+            position: relative;
+        }
+
+        .music-btn.playing {
+            background: #d946a6;
+            color: white;
+        }
+
+        .music-btn::before {
+            content: "🎵 ";
+            font-size: 18px;
+        }
+
+        /* Hidden message reveal */
+        .secret-message {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff0f8, #ffe8f3);
+            border-radius: 15px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .secret-message.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 500px;
+            margin-top: 30px;
+        }
+
+        .secret-message p {
+            color: #d946a6;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        /* Signature */
+        .signature {
+            margin-top: 40px;
+            font-size: 24px;
+            color: #d946a6;
+            font-style: italic;
+        }
+
+        /* Music status */
+        .music-status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Decorative elements */
+        .rose {
+            font-size: 40px;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .divider {
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #d946a6, transparent);
+            margin: 30px auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts background -->
+    <div class="heart-bg" id="heartBg"></div>
+
+    <!-- Main card -->
+    <div class="card-container">
+        <div class="card-header">
+            <div class="main-heart">♥</div>
+            <h1>Happy Galentine's Day</h1>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Typing animation section -->
+        <div class="message-container">
+            <div class="typed-text" id="typedText"></div>
+        </div>
+
+        <span class="rose">🌹</span>
+        <span class="rose">🌹</span>
+        <span class="rose">🌹</span>
+
+        <!-- Interactive buttons -->
+        <div class="button-container">
+            <button class="music-btn" id="musicBtn">Play Music</button>
+            <button id="revealBtn">Reveal Secret Message</button>
+        </div>
+
+        <div class="music-status" id="musicStatus">hey!CHILL Daniel Ceasor playing</div>
+
+        <!-- Hidden secret message -->
+        <div class="secret-message" id="secretMessage">
+            <p><strong>My Dearest Shaylaa😍</strong></p>
+            <p>Every moment with you feels like a beautiful melodys🎶. Nakupenda sana and i want to see you winning ❤.</p>
+            <p>Thank you for being the most amazing person in my life. ♥</p>
+            <p><em>Forever yours...</em></p>
+        </div>
+
+        <div class="signature">With all my love ♥</div>
+    </div>
+
+    <script>
+        // Typing animation
+        const messages = [
+            "Jane🤞will you be my Galentine?..",
+            "My shaylaa i love you alot.....",
+            "You are my today and all of my tomorrows...",
+            "With the highs and lows...",
+            "Together we are gonna face them...",
+            "Sasa si utacover the icecream costs😋..."
+            
+
+        ];
+        
+        let messageIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 80;
+        const deletingSpeed = 50;
+        const pauseEnd = 2000;
+        const pauseStart = 1000;
+
+        function typeEffect() {
+            const currentMessage = messages[messageIndex];
+            const typedTextElement = document.getElementById('typedText');
+            
+            if (!isDeleting && charIndex <= currentMessage.length) {
+                typedTextElement.innerHTML = currentMessage.substring(0, charIndex) + '<span class="cursor"></span>';
+                charIndex++;
+                setTimeout(typeEffect, typingSpeed);
+            } else if (!isDeleting && charIndex > currentMessage.length) {
+                setTimeout(() => {
+                    isDeleting = true;
+                    typeEffect();
+                }, pauseEnd);
+            } else if (isDeleting && charIndex >= 0) {
+                typedTextElement.innerHTML = currentMessage.substring(0, charIndex) + '<span class="cursor"></span>';
+                charIndex--;
+                setTimeout(typeEffect, deletingSpeed);
+            } else if (isDeleting && charIndex < 0) {
+                isDeleting = false;
+                messageIndex = (messageIndex + 1) % messages.length;
+                setTimeout(typeEffect, pauseStart);
+            }
+        }
+
+        // Start typing effect
+        window.addEventListener('load', () => {
+            setTimeout(typeEffect, 500);
+        });
+
+        // Floating hearts background
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '♥';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            
+            document.getElementById('heartBg').appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 20000);
+        }
+
+        // Create hearts periodically
+        setInterval(createFloatingHeart, 800);
+        
+        // Create initial hearts
+        for (let i = 0; i < 15; i++) {
+            setTimeout(createFloatingHeart, i * 300);
+        }
+
+        // Music button functionality
+        const musicBtn = document.getElementById('musicBtn');
+        const musicStatus = document.getElementById('musicStatus');
+        let audio = null;
+        let isPlaying = false;
+
+        musicBtn.addEventListener('click', () => {
+            if (!audio) {
+                // Create audio element on first click
+                audio = new Audio();
+                // daniel ceasor song playing
+                audio.src = 'best-part.mp3';
+                audio.loop = true;
+            }
+
+            if (isPlaying) {
+                audio.pause();
+                musicBtn.textContent = 'Play Music';
+                musicBtn.classList.remove('playing');
+                musicStatus.textContent = 'Music paused';
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    musicBtn.textContent = 'Pause Music';
+                    musicBtn.classList.add('playing');
+                    musicStatus.textContent = 'Now playing your special song... ♥';
+                    isPlaying = true;
+                }).catch((error) => {
+                    // If audio file not found
+                    musicStatus.textContent ='Please add "best-part.mp3" to the same folder as this HTML file!';
+                    musicStatus.style.color = '#ff6b6b'; 
+                    musicStatus.style.color = '#ff6b6b';
+                });
+            }
+        });
+
+        // Reveal secret message
+        const revealBtn = document.getElementById('revealBtn');
+        const secretMessage = document.getElementById('secretMessage');
+        let isRevealed = false;
+
+        revealBtn.addEventListener('click', () => {
+            if (!isRevealed) {
+                secretMessage.classList.add('revealed');
+                revealBtn.textContent = 'Hide Message';
+                isRevealed = true;
+            } else {
+                secretMessage.classList.remove('revealed');
+                revealBtn.textContent = 'Reveal Secret Message';
+                isRevealed = false;
+            }
+        });
+    </script>
+</body>
+</html>
